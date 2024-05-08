@@ -3,14 +3,12 @@
 **Author**: Brendan McMullen
 **Version**: 1.0.0
 
-## URL
-https://auth-server-ndih.onrender.com
 
 ## Overview
 This server authenticates users with both basic and bearer authentication. Your jwt will expire after 20 seconds but can be renewed by signing in.
 
 ## Getting Started
-To activate the server install dependencies and type node index.js or nodemon into your shell. It can also be accessed at https://auth-server-ndih.onrender.com
+To activate the server install dependencies and type node index.js or nodemon into your shell.
 
 ## Architecture
 Node.js
