@@ -10,11 +10,19 @@ const userSchema = (sequelize, DataTypes) => {
     password: { type: DataTypes.STRING, allowNull: false, },
     token: {
       type: DataTypes.VIRTUAL,
+
       get() {
-        return jwt.sign({ username: this.username }, process.env.SECRET);
+        // Generate a new JWT with an updated expiration time
+        return this.generateJWT();
       }
     }
   });
+
+  // Method to generate a new JWT with an updated expiration time
+  model.prototype.generateJWT = function () {
+    const tokenExpiration = Math.floor(Date.now() / 1000) + 20; // set time limit
+    return jwt.sign({ username: this.username, exp: tokenExpiration }, process.env.SECRET);
+  };
 
   model.beforeCreate(async (user) => {
     let hashedPass = await bcrypt.hash(user.password, 10);
@@ -25,7 +33,7 @@ const userSchema = (sequelize, DataTypes) => {
   model.authenticateBasic = async function (username, password) {
 
 
-    const user = await this.findOne({where: {username} })
+    const user = await this.findOne({ where: { username } })
     const valid = await bcrypt.compare(password, user.password)
     if (valid) { return user; }
     throw new Error('Invalid User');
@@ -37,11 +45,11 @@ const userSchema = (sequelize, DataTypes) => {
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, process.env.SECRET);
-      const user = this.findOne({where:{username: parsedToken.username}})
+      const user = this.findOne({ where: { username: parsedToken.username } })
       if (user) { return user; }
-      throw new Error("User Not Found");
+      next("User Not Found");
     } catch (e) {
-      throw new Error(e.message)
+      next(e.message);
     }
   }
 

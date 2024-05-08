@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 async function handleSignup(req, res, next) {
 
   try {
+
     let userRecord = await users.create(req.body);
     const output = {
       user: userRecord,
@@ -20,7 +21,11 @@ async function handleSignup(req, res, next) {
 }
 
 async function handleSignin(req, res, next) {
+
+
   try {
+    const userObject = await users.findOne({ where: { username: req.user.username } });
+    userObject.generateJWT();
     const user = {
       user: req.user,
       token: req.user.token
