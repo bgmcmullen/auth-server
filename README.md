@@ -22,7 +22,7 @@ bcrypt
 
 ## Change Log
 
-05-6-2024 8:43pm - Basic Functionality
+05-7-2024 8:38pm - Full Functionality
 
 
 ## Credit and Collaborations
